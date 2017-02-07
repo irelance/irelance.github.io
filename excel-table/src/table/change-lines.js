@@ -8,18 +8,8 @@ ExcelTable.table.ChangeLines = function (parent) {
     this.width = 0;
     this.height = 0;
     this.status = false;//move dot false
-    this.sRange = {
-        sRow: 0,
-        eRow: 0,
-        sCol: 0,
-        eCol: 0
-    };
-    this.eRange = {
-        sRow: 0,
-        eRow: 0,
-        sCol: 0,
-        eCol: 0
-    };
+    this.sRange = new Rectangle();
+    this.eRange = new Rectangle();
     this.direction = 'horizontal';//horizontal vertical
     this.type = 'increase';//increase decrease remove
     this.move = function (row, col) {
@@ -28,8 +18,8 @@ ExcelTable.table.ChangeLines = function (parent) {
             this.eRange.sCol = 0;
         }
         this.eRange.eCol = this.eRange.sCol - this.sRange.sCol + this.sRange.eCol;
-        if (this.eRange.eCol >= parent.columns) {
-            this.eRange.eCol = parent.columns - 1;
+        if (this.eRange.eCol > parent.range.eCol) {
+            this.eRange.eCol = parent.range.eCol;
             this.eRange.sCol = this.eRange.eCol + this.sRange.sCol - this.sRange.eCol;
         }
         this.eRange.sRow = row;
@@ -37,8 +27,8 @@ ExcelTable.table.ChangeLines = function (parent) {
             this.eRange.sRow = 0;
         }
         this.eRange.eRow = this.eRange.sRow - this.sRange.sRow + this.sRange.eRow;
-        if (this.eRange.eRow >= parent.rows) {
-            this.eRange.eRow = parent.rows - 1;
+        if (this.eRange.eRow > parent.range.eRow) {
+            this.eRange.eRow = parent.range.eRow;
             this.eRange.sRow = this.eRange.eRow + this.sRange.sRow - this.sRange.eRow;
         }
         return this;
@@ -57,8 +47,7 @@ ExcelTable.table.ChangeLines = function (parent) {
         var select = parent.selectLines;
         select.range = $.extend(true, select.range, this.eRange);
         this.sRange = $.extend(true, this.sRange, this.eRange);
-        select.active.row = select.range.sRow;
-        select.active.col = select.range.sCol;
+        select.active.setRange(select.range.sRow,select.range.sCol);
         return parent;
     };
     this.dot = function (row, col) {

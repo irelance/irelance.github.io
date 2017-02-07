@@ -6,6 +6,9 @@ ExcelTable.calculator = {
     functions: {
         finds: {
             one: function (row, column) {
+                if (this.origin.row == row && this.origin.column == column) {
+                    return NaN;
+                }
                 if (isNaN(this.result[row][column].result)) {
                     return this.calculate(this.result[row][column]);
                 }
@@ -20,7 +23,10 @@ ExcelTable.calculator = {
                     range[0] = 0;
                 }
                 if (range[1] == undefined) {
-                    range[1] = this.columns - 1;
+                    range[1] = this.range.eCol;
+                }
+                if (this.origin.row == row && this.origin.column >= range[0] && this.origin.column <= range[1]) {
+                    return NaN;
                 }
                 for (var i = range[0]; i <= range[1]; i++) {
                     result.push(this.calculate(this.result[row][i]));
@@ -36,7 +42,10 @@ ExcelTable.calculator = {
                     range[0] = 0;
                 }
                 if (range[1] == undefined) {
-                    range[1] = this.rows - 1;
+                    range[1] = this.range.eRow;
+                }
+                if (this.origin.column == column && this.origin.row >= range[0] && this.origin.row <= range[1]) {
+                    return NaN;
                 }
                 for (var j = range[0]; j <= range[1]; j++) {
                     result.push(this.calculate(this.result[j][column]));
@@ -44,28 +53,30 @@ ExcelTable.calculator = {
                 return result;
             },
             range: function (start, end) {
-                var result = [], temp = 0, i, j;
-                if (!end[0]) {
-                    end[0] = 0;
-                }
-                if (end[1] == undefined) {
-                    end[1] = this.columns - 1;
-                }
+                var result = [], i, j;
                 if (!start[0]) {
                     start[0] = 0;
                 }
-                if (start[1] == undefined) {
-                    start[1] = this.rows - 1;
+                if (!start[1]) {
+                    start[1] = 0;
+                }
+                if (end[0] == undefined) {
+                    end[0] = this.range.eRow;
+                }
+                if (end[1] == undefined) {
+                    end[1] = this.range.eCol;
                 }
                 if (start[0] > end[0]) {
-                    temp = end[0];
-                    end[0] = start[0];
-                    start[0] = temp;
+                    [start[0], end[0]] = [end[0], start[0]];
                 }
                 if (start[1] > end[1]) {
-                    temp = end[1];
-                    end[1] = start[1];
-                    start[1] = temp;
+                    [start[1], end[1]] = [end[1], start[1]];
+                }
+                if (this.origin.column >= start[1] &&
+                    this.origin.column <= end[1] &&
+                    this.origin.row >= start[0] &&
+                    this.origin.row <= end[0]) {
+                    return NaN;
                 }
                 for (j = start[1]; j <= end[1]; j++) {
                     for (i = start[0]; i <= end[0]; i++) {
@@ -94,17 +105,10 @@ ExcelTable.calculator = {
                 var result = 0;
                 arr.forEach(function (v) {
                     v = parseFloat(v);
-                    if (isNaN(v)) {
-                        v = 0;
-                    }
                     result += v;
                 });
                 return result;
             }
         }
-    },
-    regexp: {
-        one: /\$\([0-9]+,1[0-9]+\)/g,
-        row: [/\$\([0-9]+,\[/g]
     }
 };

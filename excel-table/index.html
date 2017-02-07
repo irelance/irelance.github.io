@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="src/functions.js"></script>
     <script src="require.js"></script>
     <script src="src/unit.js"></script>
     <script src="src/table.js"></script>
@@ -16,22 +17,7 @@
     <script src="src/table/change-lines.js"></script>
     <script src="src/toolbar.js"></script>
     <link href="assets/iconfont.css" rel="stylesheet">
-    <script>
-        function getDefaultStyle(elem, attribute) {
-            return elem.currentStyle ? elem.currentStyle[attribute] : document.defaultView.getComputedStyle(elem, false)[attribute];
-        }
-        elementAbsoluteStation = function (elem, station) {
-            if (!station) {
-                station = {left: 0, top: 0};
-            }
-            if (elem.offsetParent != null && getDefaultStyle(elem.offsetParent, 'position') != 'relative') {
-                station = elementAbsoluteStation(elem.offsetParent, station);
-            }
-            station.left += elem.offsetLeft;
-            station.top += elem.offsetTop;
-            return station;
-        };
-    </script>
+    <link href="assets/toolbar.css" rel="stylesheet">
     <style>
         .excel-table-content {
             position: relative;
@@ -47,7 +33,7 @@
             z-index: 1;
             box-shadow: inset 0 0 1px #000;
             position: relative;
-            background: #acf;
+            background: #f0f0f0;
         }
 
         .excel-table-content th.active {
@@ -55,7 +41,7 @@
         }
 
         .excel-table-content td {
-            box-shadow: 0 0 1px #000;
+            box-shadow: inset 0 0 1px #000;
         }
 
         .excel-table-content .excel-table-dig {
@@ -69,18 +55,18 @@
         .excel-table-unit {
             cursor: cell;
             overflow: hidden;
-            width: 70px;
-            height: 18px;
+            width: 72px;
+            height: 21px;
             color: transparent;
             text-shadow: 0 0 0 #000;
         }
 
-        .excel-table-unit.active {
-            background: #acf;
+        .excel-table-unit.select {
+            background: #f0f0f0;
         }
 
-        .excel-table-unit.active.select {
-            background: #eee;
+        .excel-table-unit.select.active {
+            background: #fff;
         }
 
         .w, .s {
@@ -107,18 +93,22 @@
         .excel-table-select-lines .s,
         .excel-table-select-lines .a,
         .excel-table-select-lines .d {
-            background: #000;
+            background: #c70;
         }
 
         .excel-table-change-lines .w,
         .excel-table-change-lines .s,
         .excel-table-change-lines .a,
         .excel-table-change-lines .d {
-            background: #f00;
+            background: #f90;
         }
 
         .clipboard {
-            display: none;
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 1px solid #f0f0f0;
+            padding: 0;
         }
 
         .excel-table-unit input {
@@ -135,38 +125,11 @@
             text-align: center;
             max-width: 80px;
         }
+
         .excel-table-search .break {
             display: inline-block;
             text-align: right;
             width: 40px;
-        }
-
-        .excel-table-toolbar {
-            background: #f0f0f0;
-            padding: 4px 0;
-        }
-
-        .excel-table-toolbar .toolbar-block {
-            display: inline-block;
-            border-left: 1px solid #d9d9d9;
-            padding-left: 3px;
-            margin-left: 3px;
-            background: transparent;
-        }
-
-        .excel-table-toolbar .toolbar-block.first {
-            border-left: 0;
-            margin-left: 0;
-        }
-
-        .toolbar-block button {
-            padding: 5px;
-            border: 0;
-            background: transparent;
-        }
-        .toolbar-block button:hover {
-            box-shadow: inset 0 0 1px #aaa;
-            background: #dfdfdf;
         }
     </style>
 </head>
