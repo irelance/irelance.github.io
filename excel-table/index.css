@@ -25,14 +25,12 @@ body {
     padding: 5px;
 }
 
-div.excel-table-unit input {
-    color: #000 !important;
-}
-.details .middle{
+.details .middle {
     box-shadow: 0 0 5px #999;
     padding: 5px;
     margin-bottom: 15px;
 }
-.details .middle p{
+
+.details .middle p {
     margin-left: 40px;
 }
